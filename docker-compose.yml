@@ -1,0 +1,38 @@
+version: "3"
+services:
+  mongo:
+    build:
+      context: .
+      dockerfile: Dockerfile-mongo
+    privileged: true
+    expose:
+     - 27017
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile-server
+    privileged: true
+    links:
+     - mongo
+    volumes:
+      - ./Minerva:/opt/minerva
+      - ./minerva_server:/var/log/minerva
+    expose: 
+      - 443
+      - 10011
+      - 10012
+    ports:
+      - "443:443"
+  
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile-agent
+    privileged: true
+    volumes:
+      - ./Minerva:/opt/minerva
+      - ./minerva_agent:/var/log/minerva
+      - ./suricata:/var/log/suricata
+    links:
+     - server

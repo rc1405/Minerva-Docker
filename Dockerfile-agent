@@ -1,0 +1,20 @@
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get install -y python-pip m2crypto supervisor libpcap-dev suricata netsniff-ng python-zmq wget
+
+RUN pip install PyYAML python-dateutil M2Crypto pypcap dpkt pytz ujson
+
+COPY files/agent_supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY files/suricata.yaml /etc/suricata/
+
+RUN cd /etc/suricata/ && wget https://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz && tar xvf emerging.rules.tar.gz
+
+RUN mkdir -p /opt/minerva && mkdir /var/log/minerva && mkdir /opt/pcap
+
+VOLUME /opt/minerva
+VOLUME /var/log/suricata
+VOLUME /var/log/minerva
+
+ENTRYPOINT ["/usr/bin/supervisord"]

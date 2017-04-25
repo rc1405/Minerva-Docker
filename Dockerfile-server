@@ -1,0 +1,20 @@
+FROM ubuntu:16.04
+
+RUN apt-get update && apt-get -y upgrade
+
+RUN apt-get install -y python-pip m2crypto supervisor yara python-zmq
+
+RUN pip install jinja2 PyYAML pymongo python-dateutil M2Crypto cherrypy netaddr pytz markupsafe yara-python ujson
+
+RUN mkdir -p /var/lib/minerva/server
+
+COPY files/server_supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY files/create_indexes.py /usr/local/bin/create_indexes.py
+RUN chmod a+x /usr/local/bin/create_indexes.py
+
+EXPOSE 443 10011 10012
+
+VOLUME /opt/minerva
+VOLUME /var/log/minerva
+
+ENTRYPOINT ["/usr/bin/supervisord"]
