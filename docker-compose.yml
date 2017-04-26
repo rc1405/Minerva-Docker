@@ -34,5 +34,6 @@ services:
       - ./Minerva:/opt/minerva
       - ./minerva_agent:/var/log/minerva
       - ./suricata:/var/log/suricata
+      - ./pcap:/opt/pcap
     links:
      - server
