@@ -1,0 +1,34 @@
+  mongo:
+    build: .
+    dockerfile: Dockerfile-mongo
+    privileged: true
+    expose:
+     - 27017
+
+  server:
+    build: .
+    dockerfile: Dockerfile-server
+    privileged: true
+    links:
+     - mongo
+    volumes:
+      - ./Minerva:/opt/minerva
+      - ./minerva_server:/var/log/minerva
+    expose: 
+      - 443
+      - 10011
+      - 10012
+    ports:
+      - "443:443"
+  
+  agent:
+    build: .
+    dockerfile: Dockerfile-agent
+    privileged: true
+    volumes:
+      - ./Minerva:/opt/minerva
+      - ./minerva_agent:/var/log/minerva
+      - ./suricata:/var/log/suricata
+      - ./pcap:/opt/pcap
+    links:
+     - server

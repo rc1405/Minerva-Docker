@@ -7,7 +7,7 @@ Docker setup to run Minerva-IDS
 3. cd Minerva-Docker
 4. git clone https://github.com/rc1405/Minerva.git
 5. mkdir minerva_agent minerva_server suricata pcap
-6. docker-compuse up --build
+6. docker-compose up --build or docker-compose -f docker-compose-v2.yml up --build for version 2
 
 ## Making Modifications
 Update code in Minerva-Docker/Minerva and restart containers
